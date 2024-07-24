@@ -1,7 +1,6 @@
 ﻿using CashRegister.FileProcessing.Calculators;
 using CashRegister.FileProcessing.Calculators.Interfaces;
 using CashRegister.FileProcessing.Factories.Interfaces;
-using CashRegister.FileProcessing.Models;
 using Microsoft.Extensions.Options;
 
 namespace CashRegister.FileProcessing.Factories
@@ -15,14 +14,20 @@ namespace CashRegister.FileProcessing.Factories
         }
         public IChangeCalculator GetChangeCalculator()
         {
-            var randomizerSettings = _config.GetSection("RandomizerSettings").Get<RandomizerSettings>();
-            if (randomizerSettings == null || !randomizerSettings.UseChangeRandomizer)
+            var calcSettings = _config.GetSection("CalculatorSettings").Get<CalculatorSettings>();
+            if (calcSettings == null)
             {
                 return new NormalChangeCalculator();
             }
-            else
+
+            switch(calcSettings.CalculatorType)
             {
-                return new RandomChangeCalculator(randomizerSettings.RandomDivisor);
+                case (int)ImplementedCalculatorType.Normal:
+                    return new NormalChangeCalculator();
+                case (int)ImplementedCalculatorType.RandomizedByOwed:
+                    return new RandomChangeCalculator(calcSettings.RandomDivisor);
+                default:
+                    return new NormalChangeCalculator();
             }
         }
     }

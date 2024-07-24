@@ -68,15 +68,15 @@ namespace CashRegister.FileProcessing.Calculators
             switch (changeOwed)
             {
                 case > 1:
-                    return 5;
+                    return 6;
                 case > 0.25m:
-                    return 4;
+                    return 5;
                 case > 0.1m:
-                    return 3;
+                    return 4;
                 case > 0.05m:
-                    return 2;
+                    return 3;
                 default:
-                    return 1;
+                    return 2;
             }
         }
     }
